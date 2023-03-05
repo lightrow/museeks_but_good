@@ -1,4 +1,3 @@
-
 ## Installation
 
 ### Build (advanced)
@@ -17,8 +16,8 @@ Requirements:
 
 Please consider that **`master` is unstable**.
 
-- `git clone git@github.com:martpie/museeks.git`
-- `cd museeks`
+- clone repo
+- `cd museeks_but_good`
 - `yarn install --frozen-lockfile`
 - `yarn build` or `yarn dev`
 
