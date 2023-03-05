@@ -1,3 +1,5 @@
+fucking buggy piece of shit electron garbage, fuck it and fuck macos and apple for not having a single good fleshed out music player like aimp or foobar
+
 ## Installation
 
 ### Build (advanced)
