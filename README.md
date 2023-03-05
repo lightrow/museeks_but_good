@@ -1,10 +1,6 @@
 
 ## Installation
 
-### Classic
-
-Builds and installers can be found [on this page](https://github.com/martpie/museeks/releases).
-
 ### Build (advanced)
 
 Museeks is built upon:
