@@ -3,6 +3,11 @@
   "name": "Dark",
   "themeSource": "dark",
   "variables": {
+    "--main-color": "#F0AD4E",
+    "--highlight-color": "#aaccff20",
+    "--link-color": "#F0AD4E",
+    "--link-color-hover": "#F0AD4E",
+
     "--text": "#efefef",
     "--background": "hsl(216, 20%, 7%)",
     "--faded": "rgba(0, 0, 0, 0.8)",
@@ -23,7 +28,7 @@
     "--tracks-header-color": "#efefef",
 
     "--success-color": "#5CB85C",
-    "--info-color": "#5BC0DE",
+    "--info-color": "#5B90bE",
     "--warning-color": "#F0AD4E",
     "--danger-color": "#de4343",
 
@@ -37,8 +42,8 @@
     "--search-bg": "hsl(216, 20%, 7%)",
     "--slider-bg": "hsl(216, 20%, 7%)",
 
-    "--scrollbar-track": "hsl(216, 20%, 15%)",
-    "--scrollbar-thumb": "rgba(255, 255, 255, 0.2)",
+    "--scrollbar-track": "hsl(216, 20%, 11%)",
+    "--scrollbar-thumb": "rgba(255, 255, 255, 0.08)",
 
     "--queue-bg": "hsl(216, 20%, 7%)",
     "--queue-header-bg": "hsl(216, 20%, 11%)",

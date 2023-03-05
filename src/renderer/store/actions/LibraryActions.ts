@@ -110,8 +110,19 @@ export const add = async (pathsToScan: string[]): Promise<TrackModel[]> => {
 
     const chunkedImportedTracks = await Promise.all(
       chunkedTracks.map(async (chunk) => {
+        let totalChunk: TrackModel[] = [];
+        let insertedChunk: TrackModel[] = [];
+
         // First, let's see if some of those files are already inserted
-        const insertedChunk = await db.tracks.insertMultiple(chunk);
+        const foundChunk = await db.tracks.findByPath(chunk.map((c) => c.path));
+
+        const chunkToInsert = chunk.filter((c1) => !foundChunk.map((c2) => c2.path).includes(c1.path));
+
+        if (chunkToInsert.length) {
+          insertedChunk = await db.tracks.insertMultiple(chunkToInsert);
+        }
+
+        totalChunk = [...insertedChunk, ...foundChunk];
 
         processed += batchSize;
 
@@ -128,11 +139,11 @@ export const add = async (pathsToScan: string[]): Promise<TrackModel[]> => {
         store.dispatch({
           type: types.LIBRARY_ADD_TRACKS,
           payload: {
-            tracks: insertedChunk,
+            tracks: totalChunk,
           },
         });
 
-        return insertedChunk;
+        return totalChunk;
       })
     );
 
@@ -234,6 +245,23 @@ export const incrementPlayCount = async (trackID: string): Promise<void> => {
   } catch (err) {
     logger.warn(err);
   }
+};
+
+export const updateTrackRating = async (trackId: string, rating: number): Promise<void> => {
+  let track = await db.tracks.findOnlyByID(trackId);
+
+  track = {
+    ...track,
+    rating: rating,
+  };
+
+  if (!track) {
+    throw new Error('No track found while trying to update track metadata');
+  }
+
+  await db.tracks.update(trackId, track);
+
+  await refresh();
 };
 
 /**

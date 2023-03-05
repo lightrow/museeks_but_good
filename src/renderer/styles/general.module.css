@@ -1,17 +1,19 @@
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 13px;
   background-color: var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
+  border-radius: 15px;
   background-color: var(--scrollbar-thumb);
 }
 
 /* Colors (default theme) */
 :root {
-  --main-color: #459ce7;
-  --link-color: #459ce7;
-  --link-color-hover: #52afff;
+  --main-color: #48768b;
+  --highlight-color: #48768b20;
+  --link-color: #648c9e;
+  --link-color-hover: #648c9e;
 }
 
 *,

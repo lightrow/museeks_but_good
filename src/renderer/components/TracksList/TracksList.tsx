@@ -1,30 +1,28 @@
 import type { MenuItemConstructorOptions } from 'electron';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import KeyBinding from 'react-keybinding-component';
 import chunk from 'lodash-es/chunk';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import KeyBinding from 'react-keybinding-component';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
-import TrackRow from '../TrackRow/TrackRow';
-import CustomScrollbar from '../CustomScrollbar/CustomScrollbar';
-import TracksListHeader from '../TracksListHeader/TracksListHeader';
-import * as LibraryActions from '../../store/actions/LibraryActions';
-import * as PlaylistsActions from '../../store/actions/PlaylistsActions';
-import * as PlayerActions from '../../store/actions/PlayerActions';
-import * as QueueActions from '../../store/actions/QueueActions';
-import { isLeftClick, isRightClick, isCtrlKey, isAltKey } from '../../lib/utils-events';
 import { PlaylistModel, TrackModel } from '../../../shared/types/museeks';
+import { isAltKey, isCtrlKey, isLeftClick, isRightClick } from '../../lib/utils-events';
+import * as LibraryActions from '../../store/actions/LibraryActions';
+import * as PlayerActions from '../../store/actions/PlayerActions';
+import * as PlaylistsActions from '../../store/actions/PlaylistsActions';
+import * as QueueActions from '../../store/actions/QueueActions';
 import { RootState } from '../../store/reducers';
-import scrollbarStyles from '../CustomScrollbar/CustomScrollbar.module.css';
 import headerStyles from '../Header/Header.module.css';
+import TrackRow from '../TrackRow/TrackRow';
+import TracksListHeader from '../TracksListHeader/TracksListHeader';
 
 import styles from './TracksList.module.css';
 
 const { Menu } = window.MuseeksAPI.remote;
 
-const CHUNK_LENGTH = 20;
-const ROW_HEIGHT = 30; // FIXME
-const TILES_TO_DISPLAY = 5;
+const CHUNK_LENGTH = 10;
+const ROW_HEIGHT = 44; // FIXME
+const TILES_TO_DISPLAY = 6;
 const TILE_HEIGHT = ROW_HEIGHT * CHUNK_LENGTH;
 
 // --------------------------------------------------------------------------
@@ -44,17 +42,18 @@ interface Props {
 const TracksList: React.FC<Props> = (props) => {
   const { tracks, type, trackPlayingId, reorderable, currentPlaylist, onReorder, playlists } = props;
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   const [tilesScrolled, setTilesScrolled] = useState(0);
   const [selected, setSelected] = useState<string[]>([]);
   const [reordered, setReordered] = useState<string[] | null>([]);
-  const [renderView, setRenderView] = useState<HTMLElement | null>(null);
   const navigate = useNavigate();
 
   const highlight = useSelector<RootState, boolean>((state) => state.library.highlightPlayingTrack);
 
   // Highlight playing track and scroll to it
   useEffect(() => {
-    if (highlight === true && trackPlayingId && renderView) {
+    if (highlight === true && trackPlayingId && scrollRef.current) {
       setSelected([trackPlayingId]);
 
       const playingTrackIndex = tracks.findIndex((track) => track._id === trackPlayingId);
@@ -62,19 +61,12 @@ const TracksList: React.FC<Props> = (props) => {
       if (playingTrackIndex >= 0) {
         const nodeOffsetTop = playingTrackIndex * ROW_HEIGHT;
 
-        renderView.scrollTop = nodeOffsetTop;
+        scrollRef.current.scrollTop = nodeOffsetTop;
       }
 
       LibraryActions.highlightPlayingTrack(false);
     }
-  }, [highlight, trackPlayingId, renderView, tracks]);
-
-  // FIXME: find a way to use a real ref for the render view
-  useEffect(() => {
-    const element = document.querySelector(`.${scrollbarStyles.renderView}`);
-
-    if (element instanceof HTMLElement) setRenderView(element);
-  }, []);
+  }, [highlight, trackPlayingId, tracks]);
 
   /**
    * Helpers
@@ -94,15 +86,12 @@ const TracksList: React.FC<Props> = (props) => {
     if (i !== -1) PlayerActions.start(tracks, tracks[i]._id);
   }, []);
 
-  const onControlAll = useCallback(
-    (i: number, tracks: TrackModel[]) => {
-      setSelected(tracks.map((track) => track._id));
-      const nodeOffsetTop = (i - 1) * ROW_HEIGHT;
+  const onControlAll = useCallback((i: number, tracks: TrackModel[]) => {
+    setSelected(tracks.map((track) => track._id));
+    const nodeOffsetTop = (i - 1) * ROW_HEIGHT;
 
-      if (renderView && renderView.scrollTop > nodeOffsetTop) renderView.scrollTop = nodeOffsetTop;
-    },
-    [renderView]
-  );
+    if (scrollRef.current && scrollRef.current.scrollTop > nodeOffsetTop) scrollRef.current.scrollTop = nodeOffsetTop;
+  }, []);
 
   const onUp = useCallback(
     (i: number, tracks: TrackModel[], shiftKeyPressed: boolean) => {
@@ -115,10 +104,11 @@ const TracksList: React.FC<Props> = (props) => {
 
         setSelected(newSelected);
         const nodeOffsetTop = (i - 1) * ROW_HEIGHT;
-        if (renderView && renderView.scrollTop > nodeOffsetTop) renderView.scrollTop = nodeOffsetTop;
+        if (scrollRef.current && scrollRef.current.scrollTop > nodeOffsetTop)
+          scrollRef.current.scrollTop = nodeOffsetTop;
       }
     },
-    [renderView, selected]
+    [selected]
   );
 
   const onDown = useCallback(
@@ -132,12 +122,15 @@ const TracksList: React.FC<Props> = (props) => {
         setSelected(newSelected);
         const nodeOffsetTop = (i + 1) * ROW_HEIGHT;
 
-        if (renderView && renderView.scrollTop + renderView.offsetHeight <= nodeOffsetTop + ROW_HEIGHT) {
-          renderView.scrollTop = nodeOffsetTop - renderView.offsetHeight + ROW_HEIGHT;
+        if (
+          scrollRef.current &&
+          scrollRef.current.scrollTop + scrollRef.current.offsetHeight <= nodeOffsetTop + ROW_HEIGHT
+        ) {
+          scrollRef.current.scrollTop = nodeOffsetTop - scrollRef.current.offsetHeight + ROW_HEIGHT;
         }
       }
     },
-    [renderView, selected]
+    [selected]
   );
 
   const onKey = useCallback(
@@ -467,14 +460,14 @@ const TracksList: React.FC<Props> = (props) => {
    */
 
   const onScroll = useCallback(() => {
-    if (renderView) {
-      const nextTilesScrolled = Math.floor(renderView.scrollTop / TILE_HEIGHT);
+    if (scrollRef.current) {
+      const nextTilesScrolled = Math.floor(scrollRef.current.scrollTop / TILE_HEIGHT);
 
       if (tilesScrolled !== nextTilesScrolled) {
         setTilesScrolled(nextTilesScrolled);
       }
     }
-  }, [tilesScrolled, renderView]);
+  }, [tilesScrolled]);
 
   const trackTiles = useMemo(() => {
     const tracksChunked = chunk(tracks, CHUNK_LENGTH);
@@ -534,11 +527,11 @@ const TracksList: React.FC<Props> = (props) => {
     <div className={styles.tracksList}>
       <KeyBinding onKey={onKey} preventInputConflict />
       <TracksListHeader enableSort={type === 'library'} />
-      <CustomScrollbar className={styles.tracksListBody} onScroll={onScroll}>
+      <div ref={scrollRef} className={styles.tracksListBody} onScroll={onScroll}>
         <div className={styles.tiles} role='listbox' style={{ height: tracks.length * ROW_HEIGHT }}>
           {trackTiles}
         </div>
-      </CustomScrollbar>
+      </div>
     </div>
   );
 };

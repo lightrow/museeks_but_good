@@ -42,11 +42,17 @@ const initialState: LibraryState = {
 export default (state = initialState, action: Action): LibraryState => {
   switch (action.type) {
     case types.LIBRARY_REFRESH: {
+      const playlist = [...state.tracks.playlist];
+
+      playlist.forEach((track, idx) => {
+        playlist[idx] = action.payload.tracks.find((t) => t._id === track._id);
+      });
+
       return {
         ...state,
         tracks: {
           library: [...action.payload.tracks],
-          playlist: [],
+          playlist: playlist,
         },
         loading: false,
       };

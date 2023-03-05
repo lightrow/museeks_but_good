@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import KeyBinding from 'react-keybinding-component';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useDrop } from 'react-dnd';
 import { NativeTypes } from 'react-dnd-html5-backend';
 
@@ -15,6 +15,7 @@ import * as PlayerActions from './store/actions/PlayerActions';
 import styles from './App.module.css';
 import { isCtrlKey } from './lib/utils-events';
 import DropzoneImport from './components/DropzoneImport/DropzoneImport';
+import * as PlaylistsActions from './store/actions/PlaylistsActions';
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,7 @@ type Props = {
 
 const Museeks: React.FC<Props> = (props) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // App shortcuts (not using Electron's global shortcuts API to avoid conflicts
   // with other applications)
@@ -75,8 +77,14 @@ const Museeks: React.FC<Props> = (props) => {
         const files = item.files.map((file) => file.path);
 
         LibraryActions.add(files)
-          .then((_importedTracks) => {
-            // TODO: Import to playlist here
+          .then(async (_importedTracks) => {
+            if (location.pathname === '/playlists') {
+              await PlaylistsActions.create(
+                files[0].split('/').pop() || 'New Playlist',
+                _importedTracks.map((t) => t._id)
+              );
+              LibraryActions.refresh();
+            }
           })
           .catch((err) => {
             logger.warn(err);

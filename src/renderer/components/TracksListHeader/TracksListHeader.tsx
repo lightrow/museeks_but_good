@@ -58,7 +58,7 @@ const TracksListHeader: React.FC<Props> = (props) => {
       />
       <TracksListHeaderCell
         className={styles.cellGenre}
-        title='Genre'
+        title='Rating'
         sortBy={enableSort ? SortBy.GENRE : null}
         icon={getIcon(sort, SortBy.GENRE)}
       />

@@ -7,7 +7,7 @@
 }
 
 .cellTrackPlaying {
-  width: 30px;
+  width: 40px;
   text-align: center;
 }
 
@@ -20,7 +20,10 @@
 }
 
 .cellArtist,
-.cellAlbum,
-.cellGenre {
+.cellAlbum {
   width: 20%;
+}
+
+.cellGenre {
+  width: 100px;
 }

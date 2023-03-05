@@ -1,16 +1,22 @@
 .playingIndicator {
   height: 100%;
   width: 100%;
-  font-size: 10px;
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  top: 0;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transform-origin: center;
+  background-color: rgba(67, 67, 67, 0.6) !important;
+  color: white !important;
 }
 
 .playingIndicator :global(.fa) {
-  transition: transform ease-in-out 0.2s;
+  transition: transform ease-in-out 0.1s;
 }
 
 .playingIndicator:hover :global(.fa) {

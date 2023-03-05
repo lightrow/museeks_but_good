@@ -62,3 +62,11 @@ export const removeUselessFolders = (folders: string[]): string[] => {
 //     audio.src = encodeURI(trackPath).replace('#', '%23');
 //   });
 // };
+
+export const wait = (duration: number) => {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, duration);
+  });
+};

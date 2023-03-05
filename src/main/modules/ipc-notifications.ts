@@ -1,4 +1,4 @@
-import { ipcMain, NativeImage, nativeImage, Notification } from 'electron';
+import { ipcMain, NativeImage, Notification } from 'electron';
 import TeenyConf from 'teeny-conf';
 
 import channels from '../../shared/lib/ipc-channels';
@@ -34,7 +34,7 @@ class IPCNotificationsModule extends ModuleWindow {
     let icon: NativeImage | undefined = undefined;
 
     if (cover !== null) {
-      icon = nativeImage.createFromDataURL(cover);
+      icon = cover;
     }
 
     const notification = new Notification({

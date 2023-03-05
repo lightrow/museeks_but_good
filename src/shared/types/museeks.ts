@@ -1,3 +1,5 @@
+import { IRating } from 'music-metadata/lib/type';
+
 /**
  * Player related stuff
  */
@@ -66,6 +68,7 @@ export type LinvoSchema<Schema> = {
  * App models
  */
 export interface Track {
+  rating?: number;
   album: string;
   artist: string[];
   disk: {
@@ -105,7 +108,7 @@ export type PlaylistModel = LinvoSchema<Playlist>;
 /**
  * Editable track fields (via right-click -> edit track)
  */
-export type TrackEditableFields = Pick<TrackModel, 'title' | 'artist' | 'album' | 'genre'>;
+export type TrackEditableFields = Pick<TrackModel, 'title' | 'artist' | 'album' | 'genre' | 'rating'>;
 
 /**
  * Various

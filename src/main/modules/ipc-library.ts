@@ -119,7 +119,7 @@ class IPCLibraryModule extends ModuleWindow {
         // @ts-ignore Outdated types
         // https://github.com/jessetane/queue/pull/15#issuecomment-414091539
         const scanQueue = queue();
-        scanQueue.concurrency = 32;
+        scanQueue.concurrency = 1;
         scanQueue.autostart = true;
 
         scanQueue.on('end', async () => {
@@ -170,6 +170,7 @@ class IPCLibraryModule extends ModuleWindow {
 
   private getDefaultMetadata(): Track {
     return {
+      rating: 0,
       album: 'Unknown',
       artist: ['Unknown artist'],
       disk: {
@@ -198,7 +199,25 @@ class IPCLibraryModule extends ModuleWindow {
   private parseMusicMetadata(data: mmd.IAudioMetadata, trackPath: string): Partial<Track> {
     const { common, format } = data;
 
+    const rating = (() => {
+      if (!common.rating?.length) {
+        return null;
+      }
+
+      let ratingValue = 0;
+
+      const ratingEntry = common.rating[0];
+      if (typeof ratingEntry === 'string') {
+        ratingValue = parseInt(ratingEntry) / 20;
+      } else if (typeof ratingEntry.rating === 'string') {
+        ratingValue = parseInt(ratingEntry.rating) / 20;
+      }
+
+      return ratingValue;
+    })();
+
     const metadata = {
+      rating: rating,
       album: common.album,
       artist: common.artists || (common.artist && [common.artist]) || (common.albumartist && [common.albumartist]),
       disk: common.disk,

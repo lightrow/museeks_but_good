@@ -74,7 +74,15 @@ const tracks = {
   },
 
   findByPath(paths: string[]): Promise<TrackModel[]> {
-    return Tracks.findOne({ _id: { $in: paths } });
+    return new Promise((resolve, reject) => {
+      Tracks.find({ path: { $in: paths } }, (err, doc) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(doc);
+      });
+    });
   },
 
   findOnlyByPath(path: string): Promise<TrackModel> {

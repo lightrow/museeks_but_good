@@ -7,12 +7,15 @@
 }
 
 .tracksListBody {
-  overflow: auto;
   flex: 1 1 auto;
+  overscroll-behavior: contain;
+  position: relative;
+  overflow: auto;
 }
 
 .tiles {
-  position: relative;
+  position: absolute;
+  width: 100%;
 }
 
 .tile {

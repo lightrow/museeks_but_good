@@ -3,6 +3,7 @@ import fs from 'fs';
 
 import * as mmd from 'music-metadata';
 import { globby } from 'globby';
+import Queue from 'queue';
 
 const SUPPORTED_COVER_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.bmp', '.gif'];
 const SUPPORTED_COVER_NAMES = ['album', 'albumart', 'folder', 'cover', 'front'];
@@ -26,41 +27,50 @@ const isValidFilename = (pathname: path.ParsedPath): boolean => {
   return isExtensionValid && isNameValid;
 };
 
+const coverQueue = new Queue({
+  autostart: true,
+  concurrency: 1,
+});
+
 /**
  * Smart fetch cover (from id3 or file directory)
  */
 export const fetchCover = async (trackPath: string, ignoreId3 = false, base64 = false): Promise<string | null> => {
-  if (!trackPath) {
-    return null;
-  }
+  return new Promise((resolve) => {
+    coverQueue.push(async () => {
+      if (!trackPath) {
+        resolve(null);
+      }
 
-  if (!ignoreId3) {
-    const data = await mmd.parseFile(trackPath);
-    const picture = data.common.picture && data.common.picture[0];
+      if (!ignoreId3) {
+        const data = await mmd.parseFile(trackPath);
+        const picture = data.common.picture && data.common.picture[0];
 
-    if (picture) {
-      // If cover in id3
-      return parseBase64(picture.format, picture.data.toString('base64'));
-    }
-  }
+        if (picture) {
+          // If cover in id3
+          resolve(parseBase64(picture.format, picture.data.toString('base64')));
+        }
+      }
 
-  // scan folder for any cover image
-  const folder = path.dirname(trackPath);
-  const pattern = `${folder.replace(/\\/g, '/')}/*`;
+      // scan folder for any cover image
+      const folder = path.dirname(trackPath);
+      const pattern = `${folder.replace(/\\/g, '/')}/*`;
 
-  const matches = await globby(pattern, { followSymbolicLinks: false });
+      const matches = await globby(pattern, { followSymbolicLinks: false });
 
-  const match = matches.find((elem) => {
-    return isValidFilename(path.parse(elem));
+      const match = matches.find((elem) => {
+        return isValidFilename(path.parse(elem));
+      });
+
+      if (match) {
+        if (base64) resolve(getFileAsBase64(match));
+
+        resolve(`file://${match}`);
+      }
+
+      resolve(null);
+    });
   });
-
-  if (match) {
-    if (base64) return getFileAsBase64(match);
-
-    return `file://${match}`;
-  }
-
-  return null;
 };
 
 /**

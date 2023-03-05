@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Icon from 'react-fontawesome';
 
 import VolumeControl from '../VolumeControl/VolumeControl';
@@ -27,9 +27,8 @@ const PlayerControls: React.FC<Props> = (props) => {
       <button type='button' className={styles.control} title='Next' onClick={PlayerActions.next}>
         <Icon name='forward' />
       </button>
-      <VolumeControl />
     </div>
   );
 };
 
-export default PlayerControls;
+export default memo(PlayerControls);

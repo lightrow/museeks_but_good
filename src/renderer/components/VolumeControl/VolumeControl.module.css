@@ -1,17 +1,16 @@
 .volumeControlContainer {
-  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  -webkit-app-region: no-drag;
 }
 
 .volumeControl {
   background-color: var(--header-bg);
-  position: absolute;
   z-index: 10;
-  top: -2px;
-  left: -110px;
-  display: none;
   padding: 10px 12px;
+}
 
-  &.visible {
-    display: block;
-  }
+.btn {
+  width: 18px;
 }

@@ -41,6 +41,8 @@
   "dependencies": {
     "@bscop/use-click-out": "^1.1.1",
     "@electron/remote": "^2.0.9",
+    "@fortawesome/free-regular-svg-icons": "^6.3.0",
+    "@fortawesome/free-solid-svg-icons": "^6.3.0",
     "@reduxjs/toolkit": "^1.9.1",
     "bluebird": "^3.7.2",
     "chardet": "^1.5.1",

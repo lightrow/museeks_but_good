@@ -38,3 +38,11 @@ export const checkBounds = function (bounds: ConfigBounds | undefined): ConfigBo
 
   return bounds;
 };
+
+export const wait = (duration: number) => {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, duration);
+  });
+};

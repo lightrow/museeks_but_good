@@ -5,7 +5,6 @@ import useClickOut from '@bscop/use-click-out';
 
 import Queue from '../Queue/Queue';
 import PlayingBarInfos from '../PlayingBarInfo/PlayingBarInfo';
-import Cover from '../Cover/Cover';
 import { TrackModel, Repeat } from '../../../shared/types/museeks';
 
 import styles from './PlayingBar.module.css';
@@ -35,18 +34,7 @@ const PlayingBar: React.FC<Props> = (props) => {
 
   return (
     <div className={styles.playingBar}>
-      <div className={styles.playingBar__cover}>
-        <Cover track={trackPlaying} />
-      </div>
       <PlayingBarInfos trackPlaying={trackPlaying} shuffle={shuffle} repeat={repeat} />
-      <div className={styles.playingBar__queue} ref={clickOutRef}>
-        <button onClick={() => setIsQueueOpen(!isQueueOpen)} className={styles.queueToggle}>
-          <Icon name='list' />
-        </button>
-        <div className={queueContainerClasses}>
-          <Queue queue={queue} queueCursor={queueCursor} />
-        </div>
-      </div>
     </div>
   );
 };

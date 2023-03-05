@@ -1,7 +1,3 @@
-:global(.os__darwin) .header__mainControls {
-  padding-left: 65px; /* let some space for titleBarStyle */
-}
-
 /* The native frame may be light, so we need to increase the contrast between
    the frame and the header */
 :global(.os__win32),
@@ -16,10 +12,10 @@
   background-color: var(--header-bg);
   color: var(--header-color);
   padding: 0 10px;
+  padding-left: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 50px;
   flex: 0 0 auto;
 
   /* Draggable region (zone able to move the window) */
@@ -27,10 +23,6 @@
 }
 
 .header__mainControls {
-  width: 220px;
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
   padding-right: 10px;
 }
 

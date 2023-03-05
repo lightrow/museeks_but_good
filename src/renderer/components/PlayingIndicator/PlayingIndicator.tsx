@@ -14,16 +14,10 @@ const getIcon = (state: PlayerStatus, hovered: boolean) => {
       return <Icon name='pause' fixedWidth />;
     }
 
-    return (
-      <div className={styles.animation}>
-        <div className={`${styles.bar}`} />
-        <div className={`${styles.bar} ${styles.barSecond}`} />
-        <div className={`${styles.bar} ${styles.barThird}`} />
-      </div>
-    );
+    return <Icon name='play'  />;
   }
 
-  return <Icon name='play' fixedWidth />;
+  return <Icon name='play'  />;
 };
 
 const TrackPlayingIndicator: React.FC = () => {

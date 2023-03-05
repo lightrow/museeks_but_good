@@ -8,8 +8,10 @@
 }
 
 .track {
+  height: 44px;
   position: relative;
   display: flex;
+  align-items: center;
   outline: none;
   border-top: solid 1px transparent;
   border-bottom: solid 1px transparent;
@@ -23,8 +25,7 @@
   }
 
   &.selected {
-    background-color: var(--main-color);
-    color: white;
+    background-color: var(--highlight-color);
 
     & + .selected {
       border-top-color: rgba(255 255 255 / 0.2);

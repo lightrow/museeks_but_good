@@ -7,6 +7,7 @@ import * as PlayerActions from '../../store/actions/PlayerActions';
 import controlStyles from '../PlayerControls/PlayerControls.module.css';
 
 import styles from './VolumeControl.module.css';
+import classNames from 'classnames';
 
 // Volume easing - http://www.dr-lex.be/info-stuff/volumecontrols.html#about
 const SMOOTHING_FACTOR = 2.5;
@@ -23,7 +24,6 @@ const getVolumeIcon = (volume: number, muted: boolean): string => {
 const VolumeControl: React.FC = (props) => {
   const audio = window.MuseeksAPI.player.getAudio();
 
-  const [showVolume, setShowVolume] = useState(false);
   const [volume, setVolume] = useState(audio.volume);
   const [muted, setMuted] = useState(audio.muted);
 
@@ -38,28 +38,17 @@ const VolumeControl: React.FC = (props) => {
   );
 
   const mute = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    if (e.currentTarget.classList.contains(controlStyles.control) || e.currentTarget.classList.contains('fa')) {
-      const muted = !window.MuseeksAPI.player.isMuted();
-
-      PlayerActions.setMuted(muted);
-      setMuted(muted);
-    }
+    const muted = !window.MuseeksAPI.player.isMuted();
+    PlayerActions.setMuted(muted);
+    setMuted(muted);
   }, []);
 
-  const volumeClasses = cx(styles.volumeControl, {
-    [styles.visible]: showVolume,
-  });
-
   return (
-    <div
-      className={styles.volumeControlContainer}
-      onMouseEnter={() => setShowVolume(true)}
-      onMouseLeave={() => setShowVolume(false)}
-    >
-      <button type='button' className={controlStyles.control} title='Volume' onClick={mute}>
+    <div className={styles.volumeControlContainer}>
+      <button type='button' className={classNames(styles.btn, 'reset')} title='Volume' onClick={mute}>
         <Icon name={getVolumeIcon(unsmoothifyVolume(volume), muted)} />
       </button>
-      <div className={volumeClasses}>
+      <div className={styles.volumeControl}>
         <Slider
           min={0}
           max={1}

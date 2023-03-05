@@ -1,0 +1,22 @@
+.stars {
+  button {
+    padding: 0;
+  }
+}
+
+.btn {
+  cursor: pointer;
+  margin: 0;
+  font-size: 12px;
+  margin-left: -3px;
+  color: var(--warning-color) !important;
+  opacity: 0.9;
+  &:hover {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.unfilled {
+  opacity: 0.5;
+}

@@ -3,6 +3,11 @@
   "name": "Light",
   "themeSource": "light",
   "variables": {
+    "--main-color": "#48768b",
+    "--highlight-color": "#48768b30",
+    "--link-color": "#48768b",
+    "--link-color-hover": "#48768b",
+
     "--text": "#333333",
     "--background": "white",
     "--faded": "rgba(255, 255, 255, 0.9)",
@@ -37,14 +42,14 @@
     "--search-bg": "white",
     "--slider-bg": "#DADADA",
 
-    "--scrollbar-track": "#DDDDDD",
-    "--scrollbar-thumb": "rgba(0, 0, 0, .25)",
+    "--scrollbar-track": "#eee",
+    "--scrollbar-thumb": "rgba(0, 0, 0, .11)",
 
     "--queue-bg": "white",
     "--queue-header-bg": "rgb(244, 244, 244)",
 
     "--checkbox-bg": "#F4F4F4",
-    "--input-bg": "#F4F4F4",
+    "--input-bg": "#FFF",
     "--input-color": "#333333",
     "--button-bg": "#E4E4E4",
     "--button-border": "rgb(0 0 0 / 0.2)",

@@ -1,21 +1,60 @@
 .cover {
-  width: 48px;
-  height: 48px;
+  width: 100px;
+  height: 100px;
   margin-right: 10px;
-  background-position: center;
-  background-size: cover;
   text-align: center;
   border-style: solid;
+  overflow: hidden;
   border-color: var(--border-color);
   border-width: 0 1px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-sizing: content-box;
+  box-sizing: border-box;
+  position: relative;
+  left: -1px;
+  position: relative;
+
+  &::after {
+  }
 }
 
-.cover__note {
-  font-family: monospace; /* the sexy one */
-  font-size: 30px;
-  line-height: 28px;
+.coverPlaceholder::after {
+  animation: fade-in 300ms;
+  content: '';
+  position: absolute;
+  background: radial-gradient(transparent 1px, #727d89 1px, #727d89, 30%, #30353a 30%, #30353a);
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+}
+
+.cover__img {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-position: center;
+  background-size: cover;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 300ms;
+  z-index: 1;
+}
+
+.coverSmall {
+  margin: 5px;
+  border-radius: 5px;
+  width: 32px;
+  height: 32px;
+  border-width: 0;
+  background-color: #3838383f;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

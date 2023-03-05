@@ -7,6 +7,8 @@ import { TrackModel } from '../../../shared/types/museeks';
 import cellStyles from '../TracksListHeader/TracksListHeader.module.css';
 
 import styles from './TrackRow.module.css';
+import Cover from '../Cover/Cover';
+import TrackRating from './TrackRating';
 
 interface Props {
   selected: boolean;
@@ -106,14 +108,16 @@ const TrackRow: React.FC<Props> = (props) => {
       onDragEnd={(draggable && props.onDragEnd) || undefined}
       {...(props.isPlaying ? { 'data-is-playing': true } : {})}
     >
-      <div className={`${styles.cell} ${cellStyles.cellTrackPlaying}`}>
+      <Cover track={track} small>
         {props.isPlaying ? <PlayingIndicator /> : null}
-      </div>
+      </Cover>
       <div className={`${styles.cell} ${cellStyles.cellTrack}`}>{track.title}</div>
       <div className={`${styles.cell} ${cellStyles.cellDuration}`}>{parseDuration(track.duration)}</div>
       <div className={`${styles.cell} ${cellStyles.cellArtist}`}>{track.artist.sort().join(', ')}</div>
       <div className={`${styles.cell} ${cellStyles.cellAlbum}`}>{track.album}</div>
-      <div className={`${styles.cell} ${cellStyles.cellGenre}`}>{track.genre.join(', ')}</div>
+      <div className={`${styles.cell} ${cellStyles.cellGenre}`}>
+        <TrackRating track={track} />
+      </div>
     </div>
   );
 };
